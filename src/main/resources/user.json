@@ -1,0 +1,27 @@
+{
+  "isSuccess": true,
+  "object": {
+    "id": 26,
+    "employeeId": 26,
+    "email": "hr@mmtr.ru",
+    "firstName": "Екатерина",
+    "lastName": "Смирнова",
+    "patronymic": "Александровна",
+    "fullName": "Смирнова Екатерина",
+    "login": "eksmirnova",
+    "isAdmin": true,
+    "isCommonEmployee": true,
+    "isDepartmentManager": true,
+    "isHRManager": true,
+    "isInternalEmployee": true,
+    "kindOfActivity": "Управление персоналом",
+    "kindOfActivityId": 9,
+    "userToken": {
+     "employeeId": 26,
+      "expiration": 1638608209547,
+      "isDeleted": false,
+      "tokenId": null,
+      "tokenInfo": "9b66d28c12922eb8a93309b8caxxxxxxx"
+    }
+  }
+}
