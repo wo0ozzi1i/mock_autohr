@@ -6,9 +6,14 @@ import com.example.MockDb.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,11 +25,12 @@ public class Controller {
 
     private final static Logger logger = LoggerFactory.getLogger(Controller.class);
     private  UserRepository userRepository;
-    ObjectMapper objectMapper = new ObjectMapper();
-
+    JSONParser jsonParser = new JSONParser();
+    private final JdbcTemplate jdbcTemplate;
     @Autowired
-    public Controller(UserRepository userRepository) {
+    public Controller(UserRepository userRepository, JdbcTemplate jdbcTemplate) {
         this.userRepository = userRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @GetMapping
@@ -32,21 +38,27 @@ public class Controller {
         return userRepository.findById(id);
     }
     @PostMapping ("/user")
-    public String findUser(@RequestBody String str) throws JsonProcessingException {
-        StringBuilder login = new StringBuilder();
-        StringBuilder password = new StringBuilder();
-        if(str!=null) {
+    public String findUser(@RequestBody String str) throws  ParseException {
+        JSONObject json = (JSONObject) jsonParser.parse(str);
+        String login = (String) json.get("login");
+        logger.info(login);
+        String password = (String) json.get("password");
+            logger.info("dsadsadds");
+            return userRepository.findByUser(login, password).get(0).getContext();
+    }
+    
+    @PostMapping("/user/create")
+    public void create(@RequestBody String str) throws JsonProcessingException, ParseException {
+        JSONObject json = (JSONObject) jsonParser.parse(str);
+        String login = (String) json.get("login");
+        logger.info(login);
+        String password = (String) json.get("password");
+        logger.info(password);
+        JSONObject content = (JSONObject) json.get("content");
+        logger.info(String.valueOf(content));
+        logger.info("debug");
+        jdbcTemplate.update("INSERT INTO pers (content, login, password) values (to_json(?),?,?)",content,login,password);
 
-            try{
-                List<Body> bodyList = objectMapper.readValue(str, new TypeReference<List<Body>>() {});
-                login.append(bodyList.get(0).getLogin());
-                password.append(bodyList.get(0).getPassword());
-            }
-            catch (Exception e){
 
-            }
-        }
-
-            return userRepository.findByUser(login.toString(), password.toString()).get(0).getContext();
     }
 }

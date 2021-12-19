@@ -12,14 +12,14 @@ public class Pers {
     private Long id;
     private String login;
     private String password;
-    @Column(name = "content")
-    private String context;
+    @Column(name = "content", columnDefinition = "jsonb")
+    private String content;
 
     public Pers(Long id, String login, String password, String context) {
         this.id = id;
         this.login = login;
         this.password = password;
-        this.context = context;
+        this.content = context;
     }
 
     public Pers(String login, String password) {
@@ -55,10 +55,10 @@ public class Pers {
     }
 
     public String getContext() {
-        return context;
+        return content;
     }
 
     public void setContext(String context) {
-        this.context = context;
+        this.content = context;
     }
 }
